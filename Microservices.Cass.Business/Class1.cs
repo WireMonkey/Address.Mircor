@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Microservices.Cass.Business
+﻿namespace Microservices.Cass.Business
 {
     public class Class1
     {

@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2003
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microservices.Cass", "Microservices.Cass\Microservices.Cass.csproj", "{0F94D617-4246-4F76-81D2-9070BBFC2BAE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microservices.Cass.Business", "Microservices.Cass.Business\Microservices.Cass.Business.csproj", "{DF836DF1-7877-46BD-BB02-9C20D20FBEFA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0F94D617-4246-4F76-81D2-9070BBFC2BAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F94D617-4246-4F76-81D2-9070BBFC2BAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F94D617-4246-4F76-81D2-9070BBFC2BAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F94D617-4246-4F76-81D2-9070BBFC2BAE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DF836DF1-7877-46BD-BB02-9C20D20FBEFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF836DF1-7877-46BD-BB02-9C20D20FBEFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DF836DF1-7877-46BD-BB02-9C20D20FBEFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DF836DF1-7877-46BD-BB02-9C20D20FBEFA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {10C4D26A-779A-4FE1-9B95-F5FB2688CE14}
+	EndGlobalSection
+EndGlobal

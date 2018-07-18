@@ -5,7 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="SmartyStreets.Net" Version="1.0.0" />
+    <PackageReference Include="smartystreets-dotnet-sdk" Version="8.0.9" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Microservices.Cass.Poco\Microservices.Cass.Poco.csproj" />
   </ItemGroup>
 
 </Project>

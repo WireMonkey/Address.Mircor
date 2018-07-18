@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  microservices.cass:
+    image: microservices.cass
+    build:
+      context: .
+      dockerfile: Microservices.Cass/Dockerfile

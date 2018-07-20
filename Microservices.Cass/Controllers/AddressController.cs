@@ -71,6 +71,10 @@ namespace Microservices.Cass.Controllers
             }
         }
 
+        /// <summary>
+        /// Get description of the end points
+        /// </summary>
+        /// <returns></returns>
         [HttpOptions]
         public IActionResult GetEndPointDetails()
         {

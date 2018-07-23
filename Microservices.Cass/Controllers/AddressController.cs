@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -9,6 +10,7 @@ using Microservices.Cass.Business;
 using Microservices.Cass.Poco;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 
 namespace Microservices.Cass.Controllers
@@ -17,17 +19,37 @@ namespace Microservices.Cass.Controllers
     [Route("api/Address")]
     public class AddressController : Controller
     {
+        public static IConfiguration Configuration { get; set; }
+
+        public AddressController()
+        {
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json");
+
+            Configuration = builder.Build();
+        }
+
         /// <summary>
         /// Process a sinlge address
         /// </summary>
         /// <param name="address"></param>
         /// <returns></returns>
         [HttpGet]
-        public IActionResult CheckValidAddress(AddressInfo address)
+        public IActionResult CheckValidAddress(string address1, string address2,string city, string state, string zip)
         {
             try
             {
-                var addressProcessing = new AddressProcessing("","");
+                var address = new AddressInfo
+                {
+                    Address1 = address1,
+                    Address2 = address2,
+                    City = city,
+                    State = state,
+                    Zip = zip
+                };
+
+                var addressProcessing = new AddressProcessing(Configuration["Smarty:userName"], Configuration["Smarty:password"]);
                 return StatusCode(200, addressProcessing.ProcessAddress(address));
             }
             catch (Exception e)
@@ -42,11 +64,11 @@ namespace Microservices.Cass.Controllers
         /// <param name="addresssList"></param>
         /// <returns></returns>
         [HttpPost]
-        public IActionResult CheckManyAddresses(List<AddressInfo> addresssList)
+        public IActionResult CheckManyAddresses([FromBody]List<AddressInfo> addresssList)
         {
             try
             {
-                var addressProcessing = new AddressProcessing("", "");
+                var addressProcessing = new AddressProcessing(Configuration["Smarty:userName"], Configuration["Smarty:password"]);
                 var returnList = new ConcurrentBag<AddressReturn>();
                 Parallel.ForEach(addresssList, (address) =>
                 {
@@ -78,8 +100,22 @@ namespace Microservices.Cass.Controllers
         [HttpOptions]
         public IActionResult GetEndPointDetails()
         {
-            return StatusCode(200,
-                value: $"Use GET for processing single address. Use POST for processing many addresses. GET takes {JsonConvert.SerializeObject(new AddressInfo())}. Returns {JsonConvert.SerializeObject(new AddressReturn())}. POST takes {JsonConvert.SerializeObject(new List<AddressInfo>())}. Returns {JsonConvert.SerializeObject(new List<AddressReturn>())}.");
-    }
+            var squigleOpen = "{";
+            var squigleClose = "}";
+            var addressReturns = new List<AddressReturn>
+            {
+                new AddressReturn(),
+                new AddressReturn()
+            };
+            var addressList = new List<AddressInfo>
+            {
+                new AddressInfo(),
+                new AddressInfo()
+            };
+
+            var returnJson = JsonConvert.DeserializeObject(
+                $"[{squigleOpen}\"Verb\":\"GET\",\"Info\":\"Processes single Address\",\"Input\":\"?address1=&address2&city=&state=&zip=\",\"Return\":{JsonConvert.SerializeObject(new AddressReturn())}{squigleClose},{squigleOpen}\"Verb\":\"POST\",\"Info\":\"Processes Multiple Address\",\"Input\":{JsonConvert.SerializeObject(addressList)},\"Return\":{JsonConvert.SerializeObject(addressReturns)}{squigleClose}]");
+            return StatusCode(200,returnJson);
+        }
     }
 }

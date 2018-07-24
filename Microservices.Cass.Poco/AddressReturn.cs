@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Microservices.Cass.Poco
+﻿namespace Microservices.Cass.Poco
 {
     public class AddressReturn
     {

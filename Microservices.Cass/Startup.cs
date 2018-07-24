@@ -27,7 +27,7 @@ namespace Microservices.Cass
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            
             app.UseMvc();
         }
     }

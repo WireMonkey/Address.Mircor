@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Microservices.Cass.Poco
+﻿namespace Microservices.Cass.Poco
 {
     public class AddressInfo
     {

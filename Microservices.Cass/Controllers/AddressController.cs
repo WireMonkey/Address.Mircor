@@ -2,16 +2,14 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Microservices.Cass.Business;
 using Microservices.Cass.Poco;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Veritas.Logging.Aop;
 
 namespace Microservices.Cass.Controllers
 {
@@ -20,8 +18,9 @@ namespace Microservices.Cass.Controllers
     public class AddressController : Controller
     {
         public static IConfiguration Configuration { get; set; }
+        private readonly ILogger<AddressController> _logger;
 
-        public AddressController()
+        public AddressController(ILogger<AddressController> logger)
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
@@ -35,6 +34,7 @@ namespace Microservices.Cass.Controllers
         /// </summary>
         /// <param name="address"></param>
         /// <returns></returns>
+        [LoggingAspect]
         [HttpGet]
         public IActionResult CheckValidAddress(string address1, string address2,string city, string state, string zip)
         {
@@ -63,6 +63,7 @@ namespace Microservices.Cass.Controllers
         /// </summary>
         /// <param name="addresssList"></param>
         /// <returns></returns>
+        [LoggingAspect]
         [HttpPost]
         public IActionResult CheckManyAddresses([FromBody]List<AddressInfo> addresssList)
         {
@@ -97,6 +98,7 @@ namespace Microservices.Cass.Controllers
         /// Get description of the end points
         /// </summary>
         /// <returns></returns>
+        [LoggingAspect]
         [HttpOptions]
         public IActionResult GetEndPointDetails()
         {

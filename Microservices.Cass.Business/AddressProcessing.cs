@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Microservices.Cass.Poco;
 using SmartyStreets;
 using SmartyStreets.USStreetApi;

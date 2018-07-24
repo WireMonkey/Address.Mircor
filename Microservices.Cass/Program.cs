@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore;
+﻿using System;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Logging;
+using NLog.Web;
 
 namespace Microservices.Cass
 {
@@ -7,12 +10,31 @@ namespace Microservices.Cass
     {
         public static void Main(string[] args)
         {
-            BuildWebHost(args).Run();
+            var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
+            try
+            {
+                BuildWebHost(args).Run();
+            }
+            catch (Exception e)
+            {
+                logger.Error(e, "Stopped program because of exception");
+                throw;
+            }
+            finally
+            {
+                NLog.LogManager.Shutdown();
+            }
         }
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
+                .ConfigureLogging(logging =>
+                {
+                    logging.ClearProviders();
+                    logging.SetMinimumLevel(LogLevel.Trace);
+                })
+                .UseNLog()
                 .Build();
     }
 }

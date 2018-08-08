@@ -19,6 +19,7 @@ namespace Microservices.Cass.Controllers
     {
         public static IConfiguration Configuration { get; set; }
         private readonly ILogger<AddressController> _logger;
+        private object description;
 
         public AddressController(ILogger<AddressController> logger)
         {
@@ -27,6 +28,34 @@ namespace Microservices.Cass.Controllers
                 .AddJsonFile("appsettings.json");
 
             Configuration = builder.Build();
+
+            description = new List<object>
+            {
+                new
+                {
+                    Verb = "GET",
+                    Info = "Processes single address.",
+                    Input = "?address1=&address2&city=&state=&zip=",
+                    Returns = new AddressReturn()
+                },
+                new
+                {
+                    Verb = "POST",
+                    Info = "Processes multiple addresses.",
+                    Input = new List<AddressInfo>
+                    {
+                        new AddressInfo(),
+                        new AddressInfo()
+
+                    },
+                    Returns = new List<AddressReturn>
+                    {
+                        new AddressReturn(),
+                        new AddressReturn()
+                    }
+                }
+            };
+
         }
 
         /// <summary>
@@ -106,34 +135,7 @@ namespace Microservices.Cass.Controllers
         [HttpOptions]
         public IActionResult GetEndPointDetails()
         {
-            var json = new List<object>
-            {
-                new
-                {
-                    Verb = "GET",
-                    Info = "Processes single address.",
-                    Input = "?address1=&address2&city=&state=&zip=",
-                    Returns = new AddressReturn()
-                },
-                new
-                {
-                    Verb = "POST",
-                    Info = "Processes multiple addresses.",
-                    Input = new List<AddressInfo>
-                    {
-                        new AddressInfo(),
-                        new AddressInfo()
-
-                    },
-                    Returns = new List<AddressReturn>
-                    {
-                        new AddressReturn(),
-                        new AddressReturn()
-                    }
-                }
-            };
-            
-            return StatusCode(200, json);
+            return StatusCode(200, description);
         }
 
         /// <summary>
@@ -145,34 +147,7 @@ namespace Microservices.Cass.Controllers
         [Route("Help")]
         public IActionResult HelpPage()
         {
-            var json = new List<object>
-            {
-                new
-                {
-                    Verb = "GET",
-                    Info = "Processes single address.",
-                    Input = "?address1=&address2&city=&state=&zip=",
-                    Returns = new AddressReturn()
-                },
-                new
-                {
-                    Verb = "POST",
-                    Info = "Processes multiple addresses.",
-                    Input = new List<AddressInfo>
-                    {
-                        new AddressInfo(),
-                        new AddressInfo()
-
-                    },
-                    Returns = new List<AddressReturn>
-                    {
-                        new AddressReturn(),
-                        new AddressReturn()
-                    }
-                }
-            };
-
-            return StatusCode(200, json);
+            return StatusCode(200, description);
         }
     }
 }

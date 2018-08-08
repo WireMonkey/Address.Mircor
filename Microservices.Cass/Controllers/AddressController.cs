@@ -32,11 +32,15 @@ namespace Microservices.Cass.Controllers
         /// <summary>
         /// Process a sinlge address
         /// </summary>
-        /// <param name="address"></param>
-        /// <returns></returns>
+        /// <param name="address1">address1</param>
+        /// <param name="address2">address2</param>
+        /// <param name="city">city</param>
+        /// <param name="state">state</param>
+        /// <param name="zip">zip</param>
+        /// <returns>{"address1":null,"address2":null,"address3":null,"city":null,"state":null,"zip":null,"zip4Code":null,"cassCode":null,"validAddress":false,"errorMessage":null}</returns>
         [LoggingAspect]
         [HttpGet]
-        public IActionResult CheckValidAddress(string address1, string address2,string city, string state, string zip)
+        public IActionResult CheckValidAddress(string address1, string address2, string city, string state, string zip)
         {
             try
             {
@@ -59,10 +63,10 @@ namespace Microservices.Cass.Controllers
         }
 
         /// <summary>
-        /// Process many addresses in parallel
+        /// Process many addresses in parallel. Returns a list of addresses
         /// </summary>
-        /// <param name="addresssList"></param>
-        /// <returns></returns>
+        /// <param name="addresssList">[{"address1":null,"address2":null,"address3":null,"city":null,"state":null,"zip":null}]</param>
+        /// <returns>[{"address1":null,"address2":null,"address3":null,"city":null,"state":null,"zip":null,"zip4Code":null,"cassCode":null,"validAddress":false,"errorMessage":null}]</returns>
         [LoggingAspect]
         [HttpPost]
         public IActionResult CheckManyAddresses([FromBody]List<AddressInfo> addresssList)
@@ -102,22 +106,49 @@ namespace Microservices.Cass.Controllers
         [HttpOptions]
         public IActionResult GetEndPointDetails()
         {
-            var squigleOpen = "{";
-            var squigleClose = "}";
-            var addressReturns = new List<AddressReturn>
+            //var squigleOpen = "{";
+            //var squigleClose = "}";
+            //var addressReturns = new List<AddressReturn>
+            //{
+            //    new AddressReturn(),
+            //    new AddressReturn()
+            //};
+            //var addressList = new List<AddressInfo>
+            //{
+            //    new AddressInfo(),
+            //    new AddressInfo()
+            //};
+
+            var json = new List<object>
             {
-                new AddressReturn(),
-                new AddressReturn()
-            };
-            var addressList = new List<AddressInfo>
-            {
-                new AddressInfo(),
-                new AddressInfo()
+                new
+                {
+                    Verb = "GET",
+                    Info = "Processes single address.",
+                    Input = "?address1=&address2&city=&state=&zip=",
+                    Returns = new AddressReturn()
+                },
+                new
+                {
+                    Verb = "POST",
+                    Info = "Processes multiple addresses.",
+                    Input = new List<AddressInfo>
+                    {
+                        new AddressInfo(),
+                        new AddressInfo()
+
+                    },
+                    Returns = new List<AddressReturn>
+                    {
+                        new AddressReturn(),
+                        new AddressReturn()
+                    }
+                }
             };
 
-            var returnJson = JsonConvert.DeserializeObject(
-                $"[{squigleOpen}\"Verb\":\"GET\",\"Info\":\"Processes single Address\",\"Input\":\"?address1=&address2&city=&state=&zip=\",\"Return\":{JsonConvert.SerializeObject(new AddressReturn())}{squigleClose},{squigleOpen}\"Verb\":\"POST\",\"Info\":\"Processes Multiple Address\",\"Input\":{JsonConvert.SerializeObject(addressList)},\"Return\":{JsonConvert.SerializeObject(addressReturns)}{squigleClose}]");
-            return StatusCode(200,returnJson);
+            //var returnJson = JsonConvert.DeserializeObject(
+            //    $"[{squigleOpen}\"Verb\":\"GET\",\"Info\":\"Processes single Address\",\"Input\":\"?address1=&address2&city=&state=&zip=\",\"Return\":{JsonConvert.SerializeObject(new AddressReturn())}{squigleClose},{squigleOpen}\"Verb\":\"POST\",\"Info\":\"Processes Multiple Address\",\"Input\":{JsonConvert.SerializeObject(addressList)},\"Return\":{JsonConvert.SerializeObject(addressReturns)}{squigleClose}]");
+            return StatusCode(200, json);
         }
     }
 }

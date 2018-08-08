@@ -40,7 +40,7 @@ namespace Microservices.Cass.Controllers
         /// <returns>{"address1":null,"address2":null,"address3":null,"city":null,"state":null,"zip":null,"zip4Code":null,"cassCode":null,"validAddress":false,"errorMessage":null}</returns>
         [LoggingAspect]
         [HttpGet]
-        public IActionResult CheckValidAddress(string address1, string address2, string city, string state, string zip)
+        public ActionResult<AddressReturn> CheckValidAddress(string address1, string address2, string city, string state, string zip)
         {
             try
             {
@@ -69,7 +69,7 @@ namespace Microservices.Cass.Controllers
         /// <returns>[{"address1":null,"address2":null,"address3":null,"city":null,"state":null,"zip":null,"zip4Code":null,"cassCode":null,"validAddress":false,"errorMessage":null}]</returns>
         [LoggingAspect]
         [HttpPost]
-        public IActionResult CheckManyAddresses([FromBody]List<AddressInfo> addresssList)
+        public ActionResult<List<AddressReturn>> CheckManyAddresses([FromBody]List<AddressInfo> addresssList)
         {
             try
             {
@@ -106,19 +106,45 @@ namespace Microservices.Cass.Controllers
         [HttpOptions]
         public IActionResult GetEndPointDetails()
         {
-            //var squigleOpen = "{";
-            //var squigleClose = "}";
-            //var addressReturns = new List<AddressReturn>
-            //{
-            //    new AddressReturn(),
-            //    new AddressReturn()
-            //};
-            //var addressList = new List<AddressInfo>
-            //{
-            //    new AddressInfo(),
-            //    new AddressInfo()
-            //};
+            var json = new List<object>
+            {
+                new
+                {
+                    Verb = "GET",
+                    Info = "Processes single address.",
+                    Input = "?address1=&address2&city=&state=&zip=",
+                    Returns = new AddressReturn()
+                },
+                new
+                {
+                    Verb = "POST",
+                    Info = "Processes multiple addresses.",
+                    Input = new List<AddressInfo>
+                    {
+                        new AddressInfo(),
+                        new AddressInfo()
 
+                    },
+                    Returns = new List<AddressReturn>
+                    {
+                        new AddressReturn(),
+                        new AddressReturn()
+                    }
+                }
+            };
+            
+            return StatusCode(200, json);
+        }
+
+        /// <summary>
+        /// Get description of the end points
+        /// </summary>
+        /// <returns></returns>
+        [LoggingAspect]
+        [HttpGet]
+        [Route("Help")]
+        public IActionResult HelpPage()
+        {
             var json = new List<object>
             {
                 new
@@ -146,8 +172,6 @@ namespace Microservices.Cass.Controllers
                 }
             };
 
-            //var returnJson = JsonConvert.DeserializeObject(
-            //    $"[{squigleOpen}\"Verb\":\"GET\",\"Info\":\"Processes single Address\",\"Input\":\"?address1=&address2&city=&state=&zip=\",\"Return\":{JsonConvert.SerializeObject(new AddressReturn())}{squigleClose},{squigleOpen}\"Verb\":\"POST\",\"Info\":\"Processes Multiple Address\",\"Input\":{JsonConvert.SerializeObject(addressList)},\"Return\":{JsonConvert.SerializeObject(addressReturns)}{squigleClose}]");
             return StatusCode(200, json);
         }
     }
